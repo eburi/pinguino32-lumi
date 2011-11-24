@@ -1,0 +1,11 @@
+* About
+
+This code is for the Pinguino32 board. It implements the code to control LED-Strips from adafruit: http://www.adafruit.com/products/306
+
+The implementation features the control of LED-Strips using the built-in SPI-controller as well as a software-emulation of the SPI-Protocol.
+
+The implementation uses states to achieve non-blocking I/O.
+
+
+* Setup
+Use this to build: https://github.com/cederigo/pingu32-make
