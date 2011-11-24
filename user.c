@@ -97,7 +97,8 @@ u8  anim_state;			// Animator state - to show non-blocking I/O
 timerContext anim_timer;// Timer variables for the Animator
 
 
-// Host to command
+// Host remote interface
+
 
 
 //////////////////////////////////////////////////////////////////////////////////
