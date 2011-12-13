@@ -115,7 +115,7 @@ void switch_buffers() {
 // LED-Strip Writer
 //////////////////////////////////////////////////////////////////////////////////
 void lw_setup() {
-	// start by writting zeros to wake-up latch(s)
+	// start by writing zeros to wake-up latch(s)
 	lw_state = LW_S_WAIT_TO_WRITE_ZEROS;
 	lw_pixelIndex = 0;
 	lw_zeroCounter = ZEROS_NEEDED;
@@ -154,17 +154,20 @@ void lw_process() {
 void dataLink_setup() {
 	writeIndex = 0;
 	CDCprintf("READY!\n");
+
+	start_ms_timer(&dataLink_timer, 1000);
 	// Nothing more to do here, CDC is initialised in main32.c
 }
 
 void dataLink_process() {
 	char buffer[64];
-	u8 bytesRead;
+	u8 bytesRead; // Will be max 64
 	u8 i = 0;
 
 	if(check_timer(&dataLink_timer)) {
 		CDCprintf("Timeout, init index - READY!\n");
 		writeIndex = 0;
+		start_ms_timer(&dataLink_timer, 1000);
 	}
 
 	bytesRead = CDCgets(buffer);
@@ -191,7 +194,9 @@ void dataLink_process() {
 // MAIN Setup & process
 //////////////////////////////////////////////////////////////////////////////////
 void setup() {
-  u8 i;
+  u32 i;
+
+  CDCprintf("Setup..\n");
 
   // for delays - CP0Count counts at half the CPU rate
   Fcp0 = GetSystemClock() / 1000000 / 2;   // max = 40 for 80MHz
