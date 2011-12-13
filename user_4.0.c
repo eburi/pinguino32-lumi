@@ -94,7 +94,7 @@ lwnContext pin56Context;
 
 u8 *pixels;				// Pointer to the buffer were the Animator can work
 u8  anim_state;			// Animator state - to show non-blocking I/O
-timerContext anim_timer;// Timer variables for the Animator
+timerContext dataLink_timer;// Timer variables for the Animator
 
 //////////////////////////////////////////////////////////////////////////////////
 // Timer and other general functions
@@ -308,7 +308,7 @@ void lwn_process(lwnContext * context) {
 //////////////////////////////////////////////////////////////////////////////////
 // Animator
 //////////////////////////////////////////////////////////////////////////////////
-void anim_setup() {
+void dataLink_setup() {
 	u32 i;
 	for(i=0; i < LEDS; i++) {
 		u32 lidx = i*3;
@@ -325,12 +325,12 @@ void anim_setup() {
 	}
 
 	anim_state = ANIM_S_WAIT_EVEN;
-	start_ms_timer(&anim_timer, 50);
+	start_ms_timer(&dataLink_timer, 50);
 }
 
-void anim_process() {
+void dataLink_process() {
 	u32 i;
-	if(anim_state == ANIM_S_WAIT_EVEN && check_timer(&anim_timer)) {
+	if(anim_state == ANIM_S_WAIT_EVEN && check_timer(&dataLink_timer)) {
 		// Waiting to light up EVEN
 //		for(i=0; i < LEDS; i++) {
 //			u32 lidx = i*3;
@@ -345,10 +345,10 @@ void anim_process() {
 ////			}
 //		}
 		switch_buffers();
-		start_ms_timer(&anim_timer, 1000);
+		start_ms_timer(&dataLink_timer, 1000);
 		anim_state = ANIM_S_WAIT_ODD;
 	}
-	if(anim_state == ANIM_S_WAIT_ODD && check_timer(&anim_timer)) {
+	if(anim_state == ANIM_S_WAIT_ODD && check_timer(&dataLink_timer)) {
 		// Waiting to light up ODD
 //		for(i=0; i < LEDS; i++) {
 //			u32 lidx = i*3;
@@ -363,7 +363,7 @@ void anim_process() {
 ////			}
 //		}
 		switch_buffers();
-		start_ms_timer(&anim_timer, 1000);
+		start_ms_timer(&dataLink_timer, 1000);
 		anim_state = ANIM_S_WAIT_EVEN;
 	}
 }
@@ -393,7 +393,7 @@ void setup() {
   pin56Context.clk_pin = 6;
   lwn_setup(&pin56Context);
 
-  anim_setup();
+  dataLink_setup();
 }
 
 void loop() {
@@ -403,5 +403,5 @@ void loop() {
   lwn_process(&pin34Context);
   lwn_process(&pin56Context);
 
-  anim_process();
+  dataLink_process();
 }

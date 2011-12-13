@@ -192,12 +192,12 @@ u8 anim_check_counter() {
 	return 0;
 }
 
-void anim_setup() {
+void dataLink_setup() {
 	anim_state = ANIM_S_WAIT_EVEN;
 	anim_start_counter(100);
 }
 
-void anim_process() {
+void dataLink_process() {
 	u32 i;
 	if(anim_state == ANIM_S_WAIT_EVEN && anim_check_counter()) {
 		// Waiting to light up EVEN
@@ -248,11 +248,11 @@ void setup() {
   
   //lb_setup();
   lw_setup();
-  anim_setup();
+  dataLink_setup();
 }
 
 void loop() {
   //lb_process();
   lw_process();
-  anim_process();
+  dataLink_process();
 }

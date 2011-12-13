@@ -91,7 +91,7 @@ u8 context->zeroCounter;
 
 u8 *pixels;				// Pointer to the buffer were the Animator can work
 u8  anim_state;			// Animator state - to show non-blocking I/O
-timerContext anim_timer;// Timer variables for the Animator
+timerContext dataLink_timer;// Timer variables for the Animator
 
 //////////////////////////////////////////////////////////////////////////////////
 // Timer and other general functions
@@ -315,14 +315,14 @@ void lwn_process() {
 //////////////////////////////////////////////////////////////////////////////////
 // Animator
 //////////////////////////////////////////////////////////////////////////////////
-void anim_setup() {
+void dataLink_setup() {
 	anim_state = ANIM_S_WAIT_EVEN;
-	start_ms_timer(&anim_timer, 50);
+	start_ms_timer(&dataLink_timer, 50);
 }
 
-void anim_process() {
+void dataLink_process() {
 	u32 i;
-	if(anim_state == ANIM_S_WAIT_EVEN && check_timer(&anim_timer)) {
+	if(anim_state == ANIM_S_WAIT_EVEN && check_timer(&dataLink_timer)) {
 		// Waiting to light up EVEN
 		for(i=0; i < LEDS; i++) {
 			u32 lidx = i*3;
@@ -337,10 +337,10 @@ void anim_process() {
 //			}
 		}
 		switch_buffers();
-		start_ms_timer(&anim_timer, 1000);
+		start_ms_timer(&dataLink_timer, 1000);
 		anim_state = ANIM_S_WAIT_ODD;
 	}
-	if(anim_state == ANIM_S_WAIT_ODD && check_timer(&anim_timer)) {
+	if(anim_state == ANIM_S_WAIT_ODD && check_timer(&dataLink_timer)) {
 		// Waiting to light up ODD
 		for(i=0; i < LEDS; i++) {
 			u32 lidx = i*3;
@@ -355,7 +355,7 @@ void anim_process() {
 //			}
 		}
 		switch_buffers();
-		start_ms_timer(&anim_timer, 1000);
+		start_ms_timer(&dataLink_timer, 1000);
 		anim_state = ANIM_S_WAIT_EVEN;
 	}
 }
@@ -376,12 +376,12 @@ void setup() {
   //lb_setup();
   lw_setup();
   lwn_setup();
-  anim_setup();
+  dataLink_setup();
 }
 
 void loop() {
   //lb_process();
   lw_process();
   lwn_process();
-  anim_process();
+  dataLink_process();
 }
