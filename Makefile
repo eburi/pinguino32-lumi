@@ -1,1 +1,1 @@
-../lumi/Makefile
+../pingu32-make/Makefile

@@ -1,1 +1,1 @@
-../lumi/main32.c
+../pingu32-make/main32.c

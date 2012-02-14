@@ -63,7 +63,7 @@ u8 *pixels;				// Pointer to the buffer were the dataLink will buffer incoming d
 
 // DataLink
 
-//#define ROTATE_CW_90
+#define ROTATE_CW_90
 
 u8  writeColByte;
 u32 writeIndexX;
