@@ -222,7 +222,7 @@ void dataLink_process() {
       insertPos *= 3;
       insertPos += writeColByte;  
 
-      CDCprintf("x: %d, y: %d, byte: %d = %d\n", writeIndexX, writeIndexY, writeColByte, insertPos);
+      /*DEBUG*///CDCprintf("x: %d, y: %d, byte: %d = %d\n", writeIndexX, writeIndexY, writeColByte, insertPos);
 
       pixels[insertPos] = buffer[i];
 
