@@ -63,7 +63,11 @@ u8 *pixels;				// Pointer to the buffer were the dataLink will buffer incoming d
 
 // DataLink
 
-#define ROTATE_CW_90
+//#define ROTATE_CW_90
+#define ROTATE_CW_180
+
+// Pixels on Lumi are oriented as GRB -> Pixels coming in are RGB
+u8 colorOffsetMap[3] = { 1, 0, 2 };
 
 u8  writeColByte;
 u32 writeIndexX;
@@ -196,7 +200,7 @@ void dataLink_process() {
     // write bytes to buffer
     for(i = 0; i < bytesRead; i++) {
 
-#ifdef ROTATE_CW_90
+#if defined ROTATE_CW_90
 
       // rotation cw 90
       // width => height, height => width
@@ -207,6 +211,19 @@ void dataLink_process() {
         // odd column
         insertPos = ( writeIndexY + writeIndexX * L_HEIGHT );
       }
+
+#elif defined ROTATE_CW_180
+
+      // rotation cw 180
+      // start from the bottom (x = WIDTH - 1 - x, y= HEIGHT - 1 - y)
+      if( (L_HEIGHT - 1 - writeIndexY) % 2 == 0 ) {
+        // even line
+        insertPos = ( (L_HEIGHT - 1 - writeIndexY) * L_WIDTH ) + ( L_WIDTH - 1 - writeIndexX);
+      } else {
+        // odd line
+        insertPos = ( (L_HEIGHT - 1 - writeIndexY) * L_WIDTH ) +  writeIndexX;
+      }
+
 #else
       // no rotation
       if( writeIndexY % 2 == 0 ) {
@@ -220,7 +237,7 @@ void dataLink_process() {
 #endif
 
       insertPos *= 3;
-      insertPos += writeColByte;  
+      insertPos += colorOffsetMap[writeColByte];  
 
       /*DEBUG*///CDCprintf("x: %d, y: %d, byte: %d = %d\n", writeIndexX, writeIndexY, writeColByte, insertPos);
 
@@ -252,7 +269,7 @@ void dataLink_process() {
       if(writeIndexY == L_HEIGHT) { 
 #endif
           // We're at the end of the buffer
-          CDCprintf("Received an image, switching buffers - READY!\n");
+          /*DEBUG*///CDCprintf("Received an image, switching buffers - READY!\n");
           switch_buffers();
 
           writeColByte = 0;
